@@ -7,7 +7,6 @@ example usage:
 without winsockwrap:
 ```cpp
 #include <iostream>
-#include <C:\\2025PROJECTS\\c\\sockwrap.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
@@ -74,7 +73,7 @@ int main(){
 WITH winsockwrap
 ```cpp
 #include <iostream>
-#include <C:\\2025PROJECTS\\cpp\\winsockwrap.h>
+#include <winsockwrap.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
