@@ -79,32 +79,39 @@ WITH winsockwrap
 #pragma comment(lib, "ws2_32.lib")
 
 int main(){
+    WSADATA wsa;
+    if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) { 
+        printf("Failed to initialize Winsock: %d\n", WSAGetLastError());
+        exit(EXIT_FAILURE);
+    }
+
     sckman server;
     server.Ssocket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in serverAddr;
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(8080);
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
-    server.addr = (sockaddr*)&serverAddr;
+    server.addr.sin_family = AF_INET;
+    server.addr.sin_port = htons(8080);
+    server.addr.sin_addr.s_addr = INADDR_ANY;
     server.addrlen = sizeof(server.addr);
-    
     server.Sbind();
+
+    printf("Established socket\nHost\t%s\nPort\t%d\n",
+    inet_ntoa(server.addr.sin_addr),
+    ntohs(server.addr.sin_port)
+    );
     server.Slisten(5);
 
     sckman client;
-    sockaddr_in clientAddr;
-    client.sck_fd = server.Saccept(client.addr, &client.addrlen);
-
+    client.fatal_on_error = true;
+    client.socket_fd = server.Saccept((sockaddr*)&client.addr, &client.addrlen);
+    client.addr = client.addr;
+    client.addrlen = client.addrlen;
     char buf[1024];
     int recvLen = client.Srecv(buf, sizeof(buf), 0);
 
     buf[recvLen] = '\0'; // Null-terminate safely
-
-
-    printf("Address:\t%s\nPort:\t%d\nMessage:\t%s\n",
+    printf("Addr:\t%s\nPort:\t%d\nMsg:\t%s\n",
     inet_ntoa(client.addr.sin_addr),
     ntohs(client.addr.sin_port),
-    # ill finish later 💔
+    buf
     );
 }
 ```
